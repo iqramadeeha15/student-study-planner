@@ -4,194 +4,392 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Student Study Planner</title>
+<title>StudyFlow | Student Planner</title>
 
 <style>
+:root {
+    --green: #39745a;
+    --green2: #6ca486;
+    --bg: #f3f7f3;
+    --card: #ffffff;
+    --text: #25392e;
+    --muted: #718075;
+    --border: #dce8de;
+    --soft: #e7f2e9;
+    --danger: #c84c4c;
+}
+
 * { box-sizing: border-box; }
 
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f4f7f5;
-    color: #293d32;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    transition: background .35s, color .35s;
 }
 
 header {
-    background: #315d48;
+    padding: 22px 28px;
+    background: linear-gradient(120deg, #285640, #5e9874);
     color: white;
-    text-align: center;
-    padding: 20px;
-}
-
-header h1 { margin: 5px; }
-
-.layout { display: flex; min-height: 85vh; }
-
-nav {
-    width: 220px;
-    flex-shrink: 0;
-    background: #e3eee6;
-    padding: 15px 10px;
-}
-
-nav button {
-    display: block;
-    width: 100%;
-    padding: 13px;
-    margin-bottom: 8px;
-    border: none;
-    border-radius: 8px;
-    background: transparent;
-    color: #293d32;
-    text-align: left;
-    font-size: 15px;
-    cursor: pointer;
-}
-
-nav button:hover, nav button.active {
-    background: #315d48;
-    color: white;
-}
-
-main { flex: 1; min-width: 0; padding: 25px; }
-
-h2 { color: #315d48; }
-
-.page { display: none; }
-.page.active { display: block; }
-
-.cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     gap: 15px;
+    flex-wrap: wrap;
 }
 
-.card {
-    background: white;
-    padding: 18px;
-    margin-bottom: 18px;
-    border-radius: 12px;
-    box-shadow: 0 3px 10px #dfe7e0;
+header h1 { margin: 0; font-size: 26px; }
+header p { margin: 5px 0 0; opacity: .85; }
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
-.stat {
-    font-size: 28px;
-    font-weight: bold;
-    color: #477d5b;
-}
-
-.action {
-    padding: 11px 16px;
-    margin: 5px 4px 5px 0;
-    border: none;
-    border-radius: 7px;
-    background: #477d5b;
-    color: white;
-    cursor: pointer;
-}
-
-.action:hover { background: #315d48; }
-
-input, textarea, select {
-    width: 100%;
-    padding: 11px;
-    margin: 8px 0 12px;
-    border: 1px solid #cbd8ce;
-    border-radius: 7px;
+button, input, select, textarea {
     font: inherit;
 }
 
-textarea { min-height: 100px; }
+button { cursor: pointer; }
+
+.layout {
+    display: flex;
+    min-height: 85vh;
+}
+
+nav {
+    width: 235px;
+    flex-shrink: 0;
+    padding: 22px 12px;
+    background: var(--card);
+    border-right: 1px solid var(--border);
+}
+
+nav button {
+    width: 100%;
+    padding: 13px;
+    margin-bottom: 7px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text);
+    text-align: left;
+    transition: background .25s, color .25s, transform .25s;
+}
+
+nav button:hover {
+    background: var(--soft);
+    transform: translateX(4px);
+}
+
+nav button.active {
+    background: var(--green);
+    color: white;
+    box-shadow: 0 5px 14px #39745a30;
+}
+
+main {
+    flex: 1;
+    min-width: 0;
+    padding: 28px;
+}
+
+.page { display: none; }
+
+.page.active {
+    display: block;
+    animation: pageEnter .4s ease both;
+}
+
+@keyframes pageEnter {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h2 { margin-top: 0; color: var(--green); }
+
+.muted { color: var(--muted); }
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
+    gap: 17px;
+}
+
+.card {
+    min-width: 0;
+    padding: 20px;
+    margin-bottom: 18px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 5px 20px #284d3510;
+    animation: cardEnter .45s ease both;
+    transition: transform .25s, box-shadow .25s;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px #284d3518;
+}
+
+@keyframes cardEnter {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.stat {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--green);
+}
+
+.action {
+    border: 0;
+    border-radius: 9px;
+    padding: 11px 16px;
+    margin: 4px 3px 4px 0;
+    color: white;
+    background: var(--green);
+    transition: transform .2s, filter .2s;
+}
+
+.action:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+.secondary {
+    background: var(--soft);
+    color: var(--green);
+}
+
+.danger { background: var(--danger); }
+
+label {
+    display: block;
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+input, select, textarea {
+    display: block;
+    width: 100%;
+    padding: 11px;
+    margin: 7px 0 12px;
+    color: var(--text);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+}
+
+textarea { min-height: 95px; resize: vertical; }
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 15px;
+}
+
+.full { grid-column: 1 / -1; }
 
 .task {
-    background: #edf4ee;
-    padding: 12px;
-    margin: 8px 0;
-    border-radius: 7px;
+    background: var(--soft);
+    border-radius: 10px;
+    padding: 14px;
+    margin: 10px 0;
     overflow-wrap: anywhere;
 }
 
-.task.done {
-    text-decoration: line-through;
-    opacity: 0.65;
-}
+.task.completed { opacity: .65; }
+.task.completed .task-title { text-decoration: line-through; }
 
-.task label {
+.task-top {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 10px;
 }
 
-.task input { width: auto; margin: 0; }
+.task-top input[type="checkbox"] {
+    width: auto;
+    margin: 4px 0;
+}
+
+.task-body { flex: 1; min-width: 0; }
+.task-title { font-weight: 700; }
+.task-meta { font-size: 13px; color: var(--muted); margin-top: 5px; }
+.task-actions { margin-top: 8px; }
+
+.badge {
+    display: inline-block;
+    border-radius: 20px;
+    padding: 4px 9px;
+    font-size: 12px;
+    background: #e1eee4;
+    color: #315d48;
+    margin: 3px;
+}
+
+.badge.overdue {
+    background: #fde7e7;
+    color: #a92d2d;
+}
+
+.badge.upcoming {
+    background: #fff0ce;
+    color: #825900;
+}
+
+.progress {
+    height: 12px;
+    overflow: hidden;
+    background: var(--soft);
+    border-radius: 20px;
+}
+
+.progress div {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, #39745a, #8bc59b);
+    transition: width .5s;
+}
+
+#timerDisplay {
+    font-size: clamp(40px, 7vw, 65px);
+    font-weight: 700;
+    text-align: center;
+    margin: 22px 0;
+    letter-spacing: 2px;
+    color: var(--green);
+}
+
+.timer-settings {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
 
 table {
     width: 100%;
     border-collapse: collapse;
-    background: white;
 }
 
 th, td {
-    border: 1px solid #d6e2d8;
-    padding: 12px;
     text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
 }
 
-th { background: #e3eee6; }
+th { color: var(--green); }
 
-.progress {
-    background: #dce8df;
-    height: 14px;
-    border-radius: 10px;
-    overflow: hidden;
+.file-list a {
+    color: var(--green);
+    overflow-wrap: anywhere;
 }
 
-#progressBar {
-    height: 100%;
-    width: 0%;
-    background: #477d5b;
-    transition: width .3s;
+.note-content {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
 }
 
-#timer {
-    font-size: 45px;
-    font-weight: bold;
-    margin: 20px 0;
+.empty {
+    text-align: center;
+    padding: 25px;
+    color: var(--muted);
 }
 
 footer {
     text-align: center;
-    padding: 18px;
-    color: #477d5b;
+    padding: 20px;
+    color: var(--muted);
 }
 
 body.dark {
-    background: #18231d;
-    color: #edf4ee;
+    --bg: #17231c;
+    --card: #24372b;
+    --text: #eef5ef;
+    --muted: #b2c1b5;
+    --border: #3b5242;
+    --soft: #304938;
+    --green: #8bc59b;
+    --green2: #a1d1ad;
 }
 
-body.dark nav { background: #22352a; }
-body.dark nav button { color: #edf4ee; }
-body.dark nav button.active,
-body.dark nav button:hover { background: #477d5b; }
-body.dark .card { background: #26382d; color: #edf4ee; }
-body.dark h2 { color: #a9d8b6; }
-body.dark .task { background: #344b3a; }
-body.dark table { background: #26382d; color: #edf4ee; }
-body.dark th { background: #344b3a; }
-body.dark td, body.dark th { border-color: #455b4a; }
+body.dark header {
+    background: linear-gradient(120deg, #172c20, #315d43);
+}
 
-@media(max-width:650px) {
+body.dark nav button.active {
+    background: #39745a;
+    color: white;
+}
+
+body.dark .badge {
+    background: #344d39;
+    color: #d5f1da;
+}
+
+body.dark .badge.overdue {
+    background: #592f32;
+    color: #ffd5d5;
+}
+
+body.dark .badge.upcoming {
+    background: #594929;
+    color: #ffe4a1;
+}
+
+body.dark input, body.dark select, body.dark textarea {
+    color: var(--text);
+}
+
+#toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    max-width: calc(100% - 40px);
+    padding: 14px 18px;
+    background: #285640;
+    color: white;
+    border-radius: 10px;
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+    transition: .3s;
+    z-index: 10;
+}
+
+#toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media(max-width: 760px) {
     .layout { display: block; }
     nav {
         width: 100%;
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 5px;
+        border-right: 0;
+        border-bottom: 1px solid var(--border);
     }
     nav button { margin: 0; }
-    main { padding: 15px; }
-    table { font-size: 12px; }
-    th, td { padding: 6px; }
+    main { padding: 16px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .full { grid-column: auto; }
+    header { padding: 18px; }
+}
+
+@media(prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+    }
 }
 </style>
 </head>
@@ -199,269 +397,671 @@ body.dark td, body.dark th { border-color: #455b4a; }
 <body>
 
 <header>
-    <h1>📚 Student Study Planner</h1>
-    <p>Plan Smart • Study Better • Achieve More</p>
+    <div>
+        <h1>🌿 StudyFlow</h1>
+        <p>Your personal academic planner</p>
+    </div>
+    <div class="header-actions">
+        <button class="action secondary" onclick="toggleDark()">🌙 Theme</button>
+    </div>
 </header>
 
 <div class="layout">
 
-<nav>
-    <button class="active" onclick="showPage('dashboard',this)">🏠 Dashboard</button>
-    <button onclick="showPage('subjects',this)">📚 Subjects</button>
-    <button onclick="showPage('timetable',this)">📅 Timetable</button>
-    <button onclick="showPage('tasks',this)">✅ My Tasks</button>
-    <button onclick="showPage('goals',this)">🎯 Study Goals</button>
-    <button onclick="showPage('timerPage',this)">⏱️ Study Timer</button>
-    <button onclick="showPage('notes',this)">📝 My Notes</button>
-    <button onclick="toggleDark()">🌙 Dark Mode</button>
+<nav aria-label="Main navigation">
+    <button class="active" data-page="dashboard" onclick="showPage('dashboard',this)">🏠 Dashboard</button>
+    <button data-page="assignments" onclick="showPage('assignments',this)">📌 Projects & Deadlines</button>
+    <button data-page="subjects" onclick="showPage('subjects',this)">📚 Subjects</button>
+    <button data-page="timetable" onclick="showPage('timetable',this)">📅 Timetable</button>
+    <button data-page="timerPage" onclick="showPage('timerPage',this)">⏱️ Study Timer</button>
+    <button data-page="notes" onclick="showPage('notes',this)">📝 Notes & Files</button>
+    <button data-page="reminders" onclick="showPage('reminders',this)">🔔 Reminders</button>
 </nav>
 
 <main>
 
 <!-- DASHBOARD -->
 <section id="dashboard" class="page active">
-    <h2>Welcome, Student! 👋</h2>
-    <p>Organise your learning and make every day productive.</p>
+    <h2>Good day, Student ✨</h2>
+    <p class="muted">Plan your work, track your deadlines, and make progress.</p>
 
     <div class="cards">
         <div class="card">
-            <p>📚 Total Subjects</p>
-            <div class="stat">6</div>
+            <p>📌 Total Assignments</p>
+            <div class="stat" id="totalCount">0</div>
         </div>
         <div class="card">
-            <p>✅ Tasks Completed</p>
+            <p>✅ Completed</p>
             <div class="stat" id="completedCount">0</div>
         </div>
         <div class="card">
-            <p>📌 Pending Tasks</p>
-            <div class="stat" id="pendingCount">3</div>
+            <p>⏳ Pending</p>
+            <div class="stat" id="pendingCount">0</div>
         </div>
         <div class="card">
-            <p>🎯 Goal Progress</p>
-            <div class="stat" id="goalPercent">0%</div>
+            <p>⚠️ Overdue</p>
+            <div class="stat" id="overdueCount">0</div>
         </div>
     </div>
 
     <div class="card">
-        <h2>Today's Schedule</h2>
-        <p>9:00 AM — Web Programming</p>
-        <p>11:00 AM — Computer Networks</p>
-        <p>2:00 PM — Database Management</p>
-        <p>4:00 PM — Operating Systems</p>
+        <h3>Assignment completion</h3>
+        <div class="progress"><div id="overallProgress"></div></div>
+        <p id="overallProgressText" class="muted">0% completed</p>
     </div>
 
     <div class="card">
-        <h2>Quick Actions</h2>
-        <button class="action" onclick="showPage('tasks')">View Tasks</button>
-        <button class="action" onclick="showPage('timerPage')">Start Studying</button>
-        <button class="action" onclick="showPage('notes')">Write Notes</button>
+        <h3>🚨 Upcoming deadlines</h3>
+        <div id="upcomingList"></div>
+        <button class="action" onclick="showPage('assignments')">Manage assignments →</button>
+    </div>
+
+    <div class="card">
+        <h3>⚡ Quick actions</h3>
+        <button class="action" onclick="showPage('assignments')">+ Add Assignment</button>
+        <button class="action" onclick="showPage('timerPage')">Start Study Timer</button>
+        <button class="action" onclick="showPage('notes')">Open Notes</button>
+    </div>
+</section>
+
+<!-- ASSIGNMENTS -->
+<section id="assignments" class="page">
+    <h2>📌 Projects & Assignments</h2>
+    <p class="muted">Add a task, set a deadline, and attach relevant files.</p>
+
+    <div class="card">
+        <h3 id="assignmentFormTitle">Create assignment</h3>
+        <form id="assignmentForm">
+            <input type="hidden" id="editId">
+
+            <div class="form-grid">
+                <div class="full">
+                    <label for="assignmentTitle">Assignment / project title *</label>
+                    <input id="assignmentTitle" required maxlength="120" placeholder="e.g. Web Programming mini project">
+                </div>
+
+                <div>
+                    <label for="assignmentSubject">Subject</label>
+                    <input id="assignmentSubject" placeholder="e.g. Web Programming">
+                </div>
+
+                <div>
+                    <label for="assignmentPriority">Priority</label>
+                    <select id="assignmentPriority">
+                        <option>Medium</option>
+                        <option>High</option>
+                        <option>Low</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="assignmentDate">Deadline date *</label>
+                    <input id="assignmentDate" type="date" required>
+                </div>
+
+                <div>
+                    <label for="assignmentTime">Deadline time</label>
+                    <input id="assignmentTime" type="time" value="23:59">
+                </div>
+
+                <div class="full">
+                    <label for="assignmentDescription">Description / instructions</label>
+                    <textarea id="assignmentDescription" placeholder="What needs to be completed?"></textarea>
+                </div>
+
+                <div class="full">
+                    <label for="assignmentFiles">Attach files (PDF, images, documents, etc.)</label>
+                    <input id="assignmentFiles" type="file" multiple>
+                    <small class="muted">Files are kept in this browser where supported. Large files may exceed browser storage limits.</small>
+                </div>
+            </div>
+
+            <button class="action" type="submit">Save assignment</button>
+            <button class="action secondary" type="button" onclick="resetAssignmentForm()">Clear form</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <label for="assignmentFilter">Filter assignments</label>
+        <select id="assignmentFilter" onchange="renderAssignments()">
+            <option value="all">All assignments</option>
+            <option value="pending">Pending</option>
+            <option value="completed">Completed</option>
+            <option value="overdue">Overdue</option>
+        </select>
+        <div id="assignmentList"></div>
     </div>
 </section>
 
 <!-- SUBJECTS -->
 <section id="subjects" class="page">
-    <h2>📚 My Subjects</h2>
-    <p>Explore your current subjects and topics.</p>
+    <h2>📚 Subjects</h2>
+    <p class="muted">Your sample academic subjects. Edit these examples in the code if needed.</p>
 
     <div class="cards">
-        <div class="card"><h3>Web Programming</h3><p>HTML, CSS, JavaScript</p><p>Practice webpages and forms.</p></div>
-        <div class="card"><h3>Computer Networks</h3><p>Networking concepts</p><p>Study protocols and network layers.</p></div>
-        <div class="card"><h3>DBMS</h3><p>Database Management</p><p>Learn SQL and database design.</p></div>
-        <div class="card"><h3>Operating Systems</h3><p>Processes and memory</p><p>Revise scheduling and deadlocks.</p></div>
-        <div class="card"><h3>Compiler Design</h3><p>Compiler fundamentals</p><p>Study lexical and syntax analysis.</p></div>
-        <div class="card"><h3>Theory of Computation</h3><p>Automata and languages</p><p>Practise finite automata.</p></div>
+        <div class="card"><h3>🌐 Web Programming</h3><p>HTML, CSS, JavaScript and web design.</p></div>
+        <div class="card"><h3>🔗 Computer Networks</h3><p>Network models, protocols and routing.</p></div>
+        <div class="card"><h3>🗄️ DBMS</h3><p>Databases, SQL and database design.</p></div>
+        <div class="card"><h3>⚙️ Operating Systems</h3><p>Processes, memory and scheduling.</p></div>
+        <div class="card"><h3>🧩 Compiler Design</h3><p>Lexical and syntax analysis.</p></div>
+        <div class="card"><h3>📖 Theory of Computation</h3><p>Automata, grammars and languages.</p></div>
     </div>
 </section>
 
 <!-- TIMETABLE -->
 <section id="timetable" class="page">
     <h2>📅 Weekly Timetable</h2>
-    <p>Your sample weekly study schedule.</p>
+    <p class="muted">Sample schedule — customize it to match your college timetable.</p>
 
-    <div class="card">
+    <div class="card" style="overflow-x:auto">
         <table>
-            <tr><th>Day</th><th>9 AM</th><th>11 AM</th><th>2 PM</th></tr>
-            <tr><td>Monday</td><td>WP</td><td>CN</td><td>DBMS</td></tr>
-            <tr><td>Tuesday</td><td>OS</td><td>WP</td><td>Compiler Design</td></tr>
-            <tr><td>Wednesday</td><td>CN</td><td>DBMS</td><td>TOC</td></tr>
-            <tr><td>Thursday</td><td>WP</td><td>OS</td><td>CN</td></tr>
-            <tr><td>Friday</td><td>DBMS</td><td>TOC</td><td>Compiler Design</td></tr>
-            <tr><td>Saturday</td><td>Revision</td><td>Practice</td><td>Mock Test</td></tr>
+            <thead><tr><th>Day</th><th>9 AM</th><th>11 AM</th><th>2 PM</th></tr></thead>
+            <tbody>
+                <tr><td>Monday</td><td>WP</td><td>CN</td><td>DBMS</td></tr>
+                <tr><td>Tuesday</td><td>OS</td><td>WP</td><td>Compiler Design</td></tr>
+                <tr><td>Wednesday</td><td>CN</td><td>DBMS</td><td>TOC</td></tr>
+                <tr><td>Thursday</td><td>WP</td><td>OS</td><td>CN</td></tr>
+                <tr><td>Friday</td><td>DBMS</td><td>TOC</td><td>Compiler Design</td></tr>
+                <tr><td>Saturday</td><td>Revision</td><td>Practice</td><td>Mock Test</td></tr>
+            </tbody>
         </table>
-    </div>
-</section>
-
-<!-- TASKS -->
-<section id="tasks" class="page">
-    <h2>✅ My Task Manager</h2>
-    <p>Add tasks and tick them when completed.</p>
-
-    <div class="card">
-        <label for="taskInput">Enter a new task</label>
-        <input id="taskInput" placeholder="Example: Revise HTML tags">
-        <button class="action" onclick="addTask()">+ Add Task</button>
-        <div id="taskList"></div>
-    </div>
-</section>
-
-<!-- GOALS -->
-<section id="goals" class="page">
-    <h2>🎯 My Study Goals</h2>
-
-    <div class="card">
-        <h3>Weekly Task Goal</h3>
-        <p>Complete at least 5 study tasks.</p>
-        <div class="progress"><div id="progressBar"></div></div>
-        <p id="progressText">0 out of 5 tasks completed</p>
-    </div>
-
-    <div class="card">
-        <h3>My Personal Goals</h3>
-        <p>✓ Attend classes regularly</p>
-        <p>✓ Revise subjects every day</p>
-        <p>✓ Complete assignments on time</p>
-        <p>✓ Practise Web Programming</p>
     </div>
 </section>
 
 <!-- TIMER -->
 <section id="timerPage" class="page">
-    <h2>⏱️ Study Timer</h2>
+    <h2>⏱️ Custom Study Timer</h2>
+    <p class="muted">Set any study duration you prefer.</p>
 
     <div class="card">
-        <p>Focus for 25 minutes, then take a short break.</p>
-        <div id="timer">25:00</div>
-        <button class="action" onclick="startTimer()">Start</button>
-        <button class="action" onclick="pauseTimer()">Pause</button>
-        <button class="action" onclick="resetTimer()">Reset</button>
+        <div class="timer-settings">
+            <div><label for="timerHours">Hours</label><input id="timerHours" type="number" min="0" max="23" value="0"></div>
+            <div><label for="timerMinutes">Minutes</label><input id="timerMinutes" type="number" min="0" max="59" value="25"></div>
+            <div><label for="timerSeconds">Seconds</label><input id="timerSeconds" type="number" min="0" max="59" value="0"></div>
+        </div>
+
+        <button class="action" onclick="setTimer()">Set duration</button>
+        <div id="timerDisplay" role="timer" aria-live="off">25:00</div>
+        <div style="text-align:center">
+            <button class="action" onclick="startTimer()">▶ Start</button>
+            <button class="action secondary" onclick="pauseTimer()">⏸ Pause</button>
+            <button class="action secondary" onclick="resetTimer()">↻ Reset</button>
+        </div>
+        <p id="timerStatus" class="muted" style="text-align:center">Ready to focus!</p>
     </div>
 </section>
 
 <!-- NOTES -->
 <section id="notes" class="page">
-    <h2>📝 My Notes</h2>
+    <h2>📝 Notes & Files</h2>
+    <p class="muted">Write notes, attach files, and save your study material in this browser.</p>
 
     <div class="card">
-        <label for="noteTitle">Note Title</label>
-        <input id="noteTitle" placeholder="Example: HTML Basics">
-        <label for="noteText">Write your notes</label>
-        <textarea id="noteText" placeholder="Write your study notes here..."></textarea>
-        <button class="action" onclick="saveNote()">Save Note</button>
-        <div id="savedNotes"></div>
+        <form id="noteForm">
+            <label for="noteTitle">Note title *</label>
+            <input id="noteTitle" required maxlength="120" placeholder="e.g. HTML revision notes">
+
+            <label for="noteText">Note content</label>
+            <textarea id="noteText" placeholder="Write your notes here..."></textarea>
+
+            <label for="noteFiles">Attach files</label>
+            <input id="noteFiles" type="file" multiple>
+
+            <button class="action" type="submit">Save note</button>
+        </form>
+    </div>
+
+    <div id="savedNotes"></div>
+</section>
+
+<!-- REMINDERS -->
+<section id="reminders" class="page">
+    <h2>🔔 Deadline Reminders</h2>
+    <p class="muted">Configure how you want to be reminded about your assignments.</p>
+
+    <div class="card">
+        <h3>Browser reminders</h3>
+        <p>When this webpage is open, StudyFlow checks pending deadlines and shows an alert when an assignment is due within the next 24 hours.</p>
+        <button class="action" onclick="checkDeadlines(true)">Check deadlines now</button>
+        <button class="action secondary" onclick="enableBrowserNotifications()">Enable browser notifications</button>
+        <p id="notificationStatus" class="muted">Browser notification permission has not been requested.</p>
+    </div>
+
+    <div class="card">
+        <h3>📧 Email reminder</h3>
+        <label for="emailAddress">Your email address</label>
+        <input id="emailAddress" type="email" placeholder="you@example.com">
+        <button class="action" onclick="emailReminder()">Prepare email reminder</button>
+        <p class="muted">This opens your email application with a reminder draft. It does not send automatically.</p>
+    </div>
+
+    <div class="card">
+        <h3>💬 WhatsApp reminder</h3>
+        <label for="whatsappNumber">WhatsApp number with country code</label>
+        <input id="whatsappNumber" type="tel" placeholder="e.g. 919876543210">
+        <button class="action" onclick="whatsappReminder()">Prepare WhatsApp reminder</button>
+        <p class="muted">This opens WhatsApp with a prefilled message. You must press Send yourself.</p>
+    </div>
+
+    <div class="card">
+        <h3>Want automatic reminders?</h3>
+        <p>Automatic email or WhatsApp delivery requires a backend, a scheduled job, and an email provider or WhatsApp Business Platform integration.</p>
     </div>
 </section>
 
 </main>
 </div>
 
-<footer>Student Study Planner | Learn • Plan • Grow</footer>
+<footer>StudyFlow • Plan better, learn better 🌿</footer>
+<div id="toast" role="status" aria-live="polite"></div>
 
 <script>
-// NAVIGATION
-function showPage(id, button) {
-    document.querySelectorAll('.page').forEach(function(page) {
-        page.classList.remove('active');
-    });
+const DB_KEY = 'studyflow_data_v1';
+let data = { assignments: [], notes: [] };
+let timerRemaining = 1500;
+let timerInterval = null;
+let notifiedIds = new Set();
+let toastTimeout = null;
 
-    const selected = document.getElementById(id);
-    if (selected) selected.classList.add('active');
+// LOCAL STORAGE
+// Assignments and notes are saved in this browser.
+// File contents are stored as data URLs, so avoid very large files.
 
-    document.querySelectorAll('nav button').forEach(function(btn) {
-        btn.classList.remove('active');
-    });
-
-    if (button) {
-        button.classList.add('active');
-    } else {
-        document.querySelectorAll('nav button').forEach(function(btn) {
-            if (btn.getAttribute('onclick').includes("'" + id + "'")) {
-                btn.classList.add('active');
-            }
-        });
+function loadData() {
+    try {
+        const raw = localStorage.getItem(DB_KEY);
+        if (raw) {
+            const parsed = JSON.parse(raw);
+            data.assignments = Array.isArray(parsed.assignments) ? parsed.assignments : [];
+            data.notes = Array.isArray(parsed.notes) ? parsed.notes : [];
+        }
+    } catch (error) {
+        showToast('Could not load saved data. Browser storage may be unavailable.');
     }
 }
 
-// INITIAL TASKS
-function createTask(text, checked) {
-    const item = document.createElement('div');
-    item.className = 'task' + (checked ? ' done' : '');
-
-    const label = document.createElement('label');
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.checked = checked;
-
-    const span = document.createElement('span');
-    span.textContent = text;
-
-    checkbox.addEventListener('change', function() {
-        item.classList.toggle('done', checkbox.checked);
-        updateTasks();
-    });
-
-    label.appendChild(checkbox);
-    label.appendChild(span);
-    item.appendChild(label);
-
-    document.getElementById('taskList').appendChild(item);
+function saveData() {
+    try {
+        localStorage.setItem(DB_KEY, JSON.stringify(data));
+        return true;
+    } catch (error) {
+        showToast('Storage is full. Try removing large attachments.');
+        return false;
+    }
 }
 
-function addTask() {
-    const input = document.getElementById('taskInput');
-    const text = input.value.trim();
+function uid() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+}
 
-    if (!text) {
-        alert('Please enter a task first.');
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+// NAVIGATION
+function showPage(id, button) {
+    const selected = document.getElementById(id);
+    if (!selected) return;
+
+    document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+    selected.classList.add('active');
+
+    document.querySelectorAll('nav button[data-page]').forEach(btn => btn.classList.remove('active'));
+
+    const navButton = button || document.querySelector('nav button[data-page="' + id + '"]');
+    if (navButton) navButton.classList.add('active');
+
+    if (id === 'dashboard') renderDashboard();
+    if (id === 'assignments') renderAssignments();
+    if (id === 'notes') renderNotes();
+}
+
+// FILE READING
+function readFiles(fileList) {
+    const files = Array.from(fileList || []);
+
+    if (files.some(file => file.size > 1.5 * 1024 * 1024)) {
+        return Promise.reject(new Error('Each file must be 1.5 MB or smaller for this browser-only version.'));
+    }
+
+    if (files.length > 5) {
+        return Promise.reject(new Error('Please attach no more than 5 files at a time.'));
+    }
+
+    return Promise.all(files.map(file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve({
+            name: file.name,
+            type: file.type || 'application/octet-stream',
+            size: file.size,
+            data: reader.result
+        });
+        reader.onerror = () => reject(new Error('A file could not be read.'));
+        reader.readAsDataURL(file);
+    })));
+}
+
+function fileLinks(files) {
+    if (!files || !files.length) return '';
+
+    const container = document.createElement('div');
+    container.className = 'file-list';
+
+    files.forEach(file => {
+        const link = document.createElement('a');
+        link.href = file.data;
+        link.download = file.name;
+        link.textContent = '📎 ' + file.name;
+        link.style.display = 'block';
+        link.style.marginTop = '7px';
+        link.target = '_blank';
+        link.rel = 'noopener';
+        container.appendChild(link);
+    });
+
+    return container;
+}
+
+// ASSIGNMENTS
+function deadlineDate(item) {
+    return new Date(item.date + 'T' + (item.time || '23:59') + ':00');
+}
+
+function isOverdue(item) {
+    return !item.completed && deadlineDate(item).getTime() < Date.now();
+}
+
+function deadlineLabel(item) {
+    const date = deadlineDate(item);
+    return date.toLocaleString([], {
+        dateStyle: 'medium',
+        timeStyle: 'short'
+    });
+}
+
+document.getElementById('assignmentForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const title = document.getElementById('assignmentTitle').value.trim();
+    const date = document.getElementById('assignmentDate').value;
+    const time = document.getElementById('assignmentTime').value || '23:59';
+    const editId = document.getElementById('editId').value;
+
+    if (!title || !date) {
+        showToast('Please enter a title and deadline.');
         return;
     }
 
-    createTask(text, false);
-    input.value = '';
-    updateTasks();
+    if (deadlineDate({date, time}).getTime() < Date.now() && !confirm('This deadline is in the past. Save it anyway?')) {
+        return;
+    }
+
+    const old = data.assignments.find(item => item.id === editId);
+    const inputFiles = document.getElementById('assignmentFiles').files;
+
+    let attachments = old ? (old.files || []) : [];
+
+    try {
+        if (inputFiles.length) {
+            const newFiles = await readFiles(inputFiles);
+            attachments = attachments.concat(newFiles);
+        }
+    } catch (error) {
+        showToast(error.message);
+        return;
+    }
+
+    const item = {
+        id: editId || uid(),
+        title,
+        subject: document.getElementById('assignmentSubject').value.trim(),
+        priority: document.getElementById('assignmentPriority').value,
+        date,
+        time,
+        description: document.getElementById('assignmentDescription').value.trim(),
+        files: attachments,
+        completed: old ? old.completed : false,
+        createdAt: old ? old.createdAt : Date.now()
+    };
+
+    if (old) {
+        data.assignments = data.assignments.map(a => a.id === editId ? item : a);
+    } else {
+        data.assignments.push(item);
+    }
+
+    if (saveData()) {
+        resetAssignmentForm();
+        renderAssignments();
+        renderDashboard();
+        showToast(old ? 'Assignment updated!' : 'Assignment added!');
+    }
+});
+
+function resetAssignmentForm() {
+    document.getElementById('assignmentForm').reset();
+    document.getElementById('editId').value = '';
+    document.getElementById('assignmentFormTitle').textContent = 'Create assignment';
+    document.getElementById('assignmentTime').value = '23:59';
 }
 
-function updateTasks() {
-    const boxes = document.querySelectorAll('#taskList input[type="checkbox"]');
-    const completed = document.querySelectorAll('#taskList input[type="checkbox"]:checked').length;
-    const pending = boxes.length - completed;
+function editAssignment(id) {
+    const item = data.assignments.find(a => a.id === id);
+    if (!item) return;
 
+    document.getElementById('editId').value = item.id;
+    document.getElementById('assignmentTitle').value = item.title;
+    document.getElementById('assignmentSubject').value = item.subject || '';
+    document.getElementById('assignmentPriority').value = item.priority;
+    document.getElementById('assignmentDate').value = item.date;
+    document.getElementById('assignmentTime').value = item.time;
+    document.getElementById('assignmentDescription').value = item.description || '';
+    document.getElementById('assignmentFormTitle').textContent = 'Edit assignment';
+
+    showPage('assignments');
+    document.getElementById('assignmentTitle').focus();
+}
+
+function toggleAssignment(id, checked) {
+    const item = data.assignments.find(a => a.id === id);
+    if (!item) return;
+    item.completed = checked;
+    saveData();
+    renderAssignments();
+    renderDashboard();
+}
+
+function deleteAssignment(id) {
+    if (!confirm('Delete this assignment and its attached files?')) return;
+    data.assignments = data.assignments.filter(a => a.id !== id);
+    saveData();
+    renderAssignments();
+    renderDashboard();
+    showToast('Assignment deleted.');
+}
+
+function renderAssignments() {
+    const container = document.getElementById('assignmentList');
+    const filter = document.getElementById('assignmentFilter').value;
+    container.replaceChildren();
+
+    let items = [...data.assignments].sort((a, b) => deadlineDate(a) - deadlineDate(b));
+
+    if (filter === 'pending') items = items.filter(a => !a.completed && !isOverdue(a));
+    if (filter === 'completed') items = items.filter(a => a.completed);
+    if (filter === 'overdue') items = items.filter(a => isOverdue(a));
+
+    if (!items.length) {
+        container.innerHTML = '<div class="empty">No assignments here yet. Add one using the form above.</div>';
+        return;
+    }
+
+    items.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'task' + (item.completed ? ' completed' : '');
+
+        const top = document.createElement('div');
+        top.className = 'task-top';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = item.completed;
+        checkbox.setAttribute('aria-label', 'Mark ' + item.title + ' completed');
+        checkbox.addEventListener('change', () => toggleAssignment(item.id, checkbox.checked));
+
+        const body = document.createElement('div');
+        body.className = 'task-body';
+
+        const title = document.createElement('div');
+        title.className = 'task-title';
+        title.textContent = item.title;
+
+        const meta = document.createElement('div');
+        meta.className = 'task-meta';
+        meta.textContent = (item.subject || 'General') + ' • Due ' + deadlineLabel(item);
+
+        const priority = document.createElement('span');
+        priority.className = 'badge';
+        priority.textContent = item.priority + ' priority';
+
+        const status = document.createElement('span');
+        status.className = 'badge' + (isOverdue(item) ? ' overdue' : (!item.completed ? ' upcoming' : ''));
+        status.textContent = item.completed ? 'Completed' : (isOverdue(item) ? 'Overdue' : 'Pending');
+
+        body.append(title, meta, priority, status);
+
+        if (item.description) {
+            const description = document.createElement('p');
+            description.textContent = item.description;
+            body.appendChild(description);
+        }
+
+        const links = fileLinks(item.files);
+        if (links) body.appendChild(links);
+
+        const actions = document.createElement('div');
+        actions.className = 'task-actions';
+
+        const edit = document.createElement('button');
+        edit.className = 'action secondary';
+        edit.textContent = 'Edit';
+        edit.addEventListener('click', () => editAssignment(item.id));
+
+        const remove = document.createElement('button');
+        remove.className = 'action danger';
+        remove.textContent = 'Delete';
+        remove.addEventListener('click', () => deleteAssignment(item.id));
+
+        actions.append(edit, remove);
+        body.appendChild(actions);
+        top.append(checkbox, body);
+        card.appendChild(top);
+        container.appendChild(card);
+    });
+}
+
+function renderDashboard() {
+    const total = data.assignments.length;
+    const completed = data.assignments.filter(a => a.completed).length;
+    const pending = total - completed;
+    const overdue = data.assignments.filter(isOverdue).length;
+    const percent = total ? Math.round(completed / total * 100) : 0;
+
+    document.getElementById('totalCount').textContent = total;
     document.getElementById('completedCount').textContent = completed;
     document.getElementById('pendingCount').textContent = pending;
+    document.getElementById('overdueCount').textContent = overdue;
+    document.getElementById('overallProgress').style.width = percent + '%';
+    document.getElementById('overallProgressText').textContent = percent + '% completed';
 
-    const percent = boxes.length ? Math.round(completed / boxes.length * 100) : 0;
-    document.getElementById('goalPercent').textContent = percent + '%';
+    const list = document.getElementById('upcomingList');
+    list.replaceChildren();
 
-    const goal = Math.min(completed, 5);
-    document.getElementById('progressBar').style.width = (goal / 5 * 100) + '%';
-    document.getElementById('progressText').textContent = goal + ' out of 5 tasks completed';
+    const upcoming = data.assignments
+        .filter(a => !a.completed)
+        .sort((a, b) => deadlineDate(a) - deadlineDate(b))
+        .slice(0, 5);
+
+    if (!upcoming.length) {
+        list.innerHTML = '<div class="empty">No pending deadlines. Add an assignment to get started!</div>';
+        return;
+    }
+
+    upcoming.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'task';
+
+        const title = document.createElement('strong');
+        title.textContent = item.title;
+
+        const due = document.createElement('div');
+        due.className = 'task-meta';
+        due.textContent = 'Due ' + deadlineLabel(item);
+
+        const badge = document.createElement('span');
+        badge.className = 'badge' + (isOverdue(item) ? ' overdue' : ' upcoming');
+        badge.textContent = isOverdue(item) ? 'Overdue' : 'Upcoming';
+
+        row.append(title, due, badge);
+        list.appendChild(row);
+    });
 }
 
-// DARK MODE
-function toggleDark() {
-    document.body.classList.toggle('dark');
-}
+// CUSTOM TIMER
+function setTimer() {
+    pauseTimer();
 
-// STUDY TIMER
-let seconds = 25 * 60;
-let timerInterval = null;
+    const h = Number(document.getElementById('timerHours').value);
+    const m = Number(document.getElementById('timerMinutes').value);
+    const s = Number(document.getElementById('timerSeconds').value);
+
+    if (![h, m, s].every(Number.isInteger) ||
+        h < 0 || h > 23 || m < 0 || m > 59 || s < 0 || s > 59 ||
+        h * 3600 + m * 60 + s <= 0) {
+        showToast('Enter a valid duration greater than zero.');
+        return;
+    }
+
+    timerRemaining = h * 3600 + m * 60 + s;
+    displayTimer();
+    document.getElementById('timerStatus').textContent = 'Timer ready!';
+}
 
 function displayTimer() {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    document.getElementById('timer').textContent =
-        String(mins).padStart(2, '0') + ':' +
-        String(secs).padStart(2, '0');
+    const h = Math.floor(timerRemaining / 3600);
+    const m = Math.floor((timerRemaining % 3600) / 60);
+    const s = timerRemaining % 60;
+
+    document.getElementById('timerDisplay').textContent =
+        h > 0
+            ? String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0')
+            : String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
 }
 
 function startTimer() {
     if (timerInterval !== null) return;
 
-    timerInterval = setInterval(function() {
-        if (seconds > 0) {
-            seconds--;
+    if (timerRemaining <= 0) {
+        showToast('Set a timer duration first.');
+        return;
+    }
+
+    document.getElementById('timerStatus').textContent = 'Focus time — you can do it!';
+
+    timerInterval = setInterval(() => {
+        if (timerRemaining > 0) {
+            timerRemaining--;
             displayTimer();
-        } else {
+        }
+
+        if (timerRemaining <= 0) {
             pauseTimer();
+            document.getElementById('timerStatus').textContent = 'Session complete. Take a break!';
+            showToast('🎉 Study session completed!');
             alert('Study session completed! Take a short break.');
         }
     }, 1000);
@@ -470,49 +1070,229 @@ function startTimer() {
 function pauseTimer() {
     clearInterval(timerInterval);
     timerInterval = null;
+    const status = document.getElementById('timerStatus');
+    if (status && timerRemaining > 0) status.textContent = 'Timer paused.';
 }
 
 function resetTimer() {
     pauseTimer();
-    seconds = 25 * 60;
+    timerRemaining =
+        Number(document.getElementById('timerHours').value || 0) * 3600 +
+        Number(document.getElementById('timerMinutes').value || 0) * 60 +
+        Number(document.getElementById('timerSeconds').value || 0);
+
+    if (timerRemaining <= 0) timerRemaining = 25 * 60;
     displayTimer();
+    document.getElementById('timerStatus').textContent = 'Timer reset.';
 }
 
-// NOTES
-function saveNote() {
+// NOTES AND ATTACHMENTS
+document.getElementById('noteForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
     const title = document.getElementById('noteTitle').value.trim();
     const content = document.getElementById('noteText').value.trim();
+    const inputFiles = document.getElementById('noteFiles').files;
 
-    if (!title || !content) {
-        alert('Please enter both a title and some notes.');
+    if (!title) {
+        showToast('Enter a note title.');
         return;
     }
 
-    const card = document.createElement('div');
-    card.className = 'task';
+    try {
+        const files = await readFiles(inputFiles);
 
-    const heading = document.createElement('h3');
-    heading.textContent = title;
+        const note = {
+            id: uid(),
+            title,
+            content,
+            files,
+            createdAt: new Date().toISOString()
+        };
 
-    const paragraph = document.createElement('p');
-    paragraph.textContent = content;
+        data.notes.unshift(note);
 
-    card.appendChild(heading);
-    card.appendChild(paragraph);
-    document.getElementById('savedNotes').appendChild(card);
+        if (saveData()) {
+            this.reset();
+            renderNotes();
+            showToast('Note saved in this browser.');
+        } else {
+            data.notes.shift();
+        }
+    } catch (error) {
+        showToast(error.message);
+    }
+});
 
-    document.getElementById('noteTitle').value = '';
-    document.getElementById('noteText').value = '';
+function renderNotes() {
+    const container = document.getElementById('savedNotes');
+    container.replaceChildren();
+
+    if (!data.notes.length) {
+        container.innerHTML = '<div class="card empty">No notes saved yet.</div>';
+        return;
+    }
+
+    data.notes.forEach(note => {
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        const heading = document.createElement('h3');
+        heading.textContent = note.title;
+
+        const content = document.createElement('p');
+        content.className = 'note-content';
+        content.textContent = note.content || '(No text content)';
+
+        const date = document.createElement('p');
+        date.className = 'task-meta';
+        date.textContent = 'Saved ' + new Date(note.createdAt).toLocaleString();
+
+        card.append(heading, content, date);
+
+        const links = fileLinks(note.files);
+        if (links) card.appendChild(links);
+
+        const remove = document.createElement('button');
+        remove.className = 'action danger';
+        remove.textContent = 'Delete note';
+        remove.addEventListener('click', () => {
+            if (!confirm('Delete this note and its attachments?')) return;
+            data.notes = data.notes.filter(n => n.id !== note.id);
+            saveData();
+            renderNotes();
+            showToast('Note deleted.');
+        });
+
+        card.appendChild(remove);
+        container.appendChild(card);
+    });
+}
+
+// REMINDERS
+function checkDeadlines(manual) {
+    const now = Date.now();
+    const day = 24 * 60 * 60 * 1000;
+
+    const dueSoon = data.assignments.filter(item => {
+        const due = deadlineDate(item).getTime();
+        return !item.completed && due >= now && due <= now + day;
+    });
+
+    const overdue = data.assignments.filter(isOverdue);
+
+    if (manual) {
+        if (!dueSoon.length && !overdue.length) {
+            showToast('No overdue assignments or deadlines in the next 24 hours.');
+        } else {
+            const message = [];
+            if (overdue.length) message.push(overdue.length + ' overdue assignment(s)');
+            if (dueSoon.length) message.push(dueSoon.length + ' deadline(s) within 24 hours');
+            showToast(message.join(' • '));
+        }
+    }
+
+    dueSoon.forEach(item => {
+        if (notifiedIds.has(item.id)) return;
+        notifiedIds.add(item.id);
+
+        if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification('StudyFlow deadline reminder', {
+                body: item.title + ' is due ' + deadlineLabel(item)
+            });
+        }
+    });
+}
+
+async function enableBrowserNotifications() {
+    if (!('Notification' in window)) {
+        document.getElementById('notificationStatus').textContent =
+            'This browser does not support notifications.';
+        return;
+    }
+
+    try {
+        const permission = await Notification.requestPermission();
+        document.getElementById('notificationStatus').textContent =
+            permission === 'granted'
+                ? 'Notifications enabled while this page is open.'
+                : 'Notifications were not enabled. You can still check deadlines inside the website.';
+    } catch (error) {
+        document.getElementById('notificationStatus').textContent =
+            'Notifications are unavailable in this browser context.';
+    }
+}
+
+function reminderText() {
+    const pending = data.assignments.filter(item => !item.completed)
+        .sort((a, b) => deadlineDate(a) - deadlineDate(b));
+
+    if (!pending.length) return 'StudyFlow: You have no pending assignments. Great work!';
+
+    return 'StudyFlow deadline reminder:\n\n' + pending.slice(0, 10).map(item =>
+        '• ' + item.title + '\n  Due: ' + deadlineLabel(item) +
+        (item.subject ? '\n  Subject: ' + item.subject : '')
+    ).join('\n\n');
+}
+
+function emailReminder() {
+    const address = document.getElementById('emailAddress').value.trim();
+
+    if (!address || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address)) {
+        showToast('Enter a valid email address.');
+        return;
+    }
+
+    const subject = encodeURIComponent('StudyFlow assignment deadline reminder');
+    const body = encodeURIComponent(reminderText());
+
+    window.location.href = 'mailto:' + encodeURIComponent(address) +
+        '?subject=' + subject + '&body=' + body;
+}
+
+function whatsappReminder() {
+    const number = document.getElementById('whatsappNumber').value.replace(/\D/g, '');
+
+    if (number.length < 10 || number.length > 15) {
+        showToast('Enter a valid number with country code.');
+        return;
+    }
+
+    const message = encodeURIComponent(reminderText());
+    window.open('https://wa.me/' + number + '?text=' + message, '_blank', 'noopener');
+}
+
+// DARK MODE
+function toggleDark() {
+    document.body.classList.toggle('dark');
+
+    try {
+        localStorage.setItem(
+            'studyflow_dark',
+            document.body.classList.contains('dark') ? 'yes' : 'no'
+        );
+    } catch (error) {}
 }
 
 // STARTUP
-createTask('Complete HTML program', false);
-createTask('Revise class notes', false);
-createTask('Prepare for examinations', false);
+loadData();
 
-updateTasks();
+try {
+    if (localStorage.getItem('studyflow_dark') === 'yes') {
+        document.body.classList.add('dark');
+    }
+} catch (error) {}
+
+renderAssignments();
+renderDashboard();
+renderNotes();
 displayTimer();
+
+// Deadline checks run only while the page is open.
+checkDeadlines(false);
+setInterval(() => checkDeadlines(false), 60 * 1000);
 </script>
 
 </body>
 </html>
+```
