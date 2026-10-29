@@ -1,0 +1,518 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Study Planner</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f7f5;
+    color: #293d32;
+}
+
+header {
+    background: #315d48;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+header h1 { margin: 5px; }
+
+.layout { display: flex; min-height: 85vh; }
+
+nav {
+    width: 220px;
+    flex-shrink: 0;
+    background: #e3eee6;
+    padding: 15px 10px;
+}
+
+nav button {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    margin-bottom: 8px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #293d32;
+    text-align: left;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+nav button:hover, nav button.active {
+    background: #315d48;
+    color: white;
+}
+
+main { flex: 1; min-width: 0; padding: 25px; }
+
+h2 { color: #315d48; }
+
+.page { display: none; }
+.page.active { display: block; }
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.card {
+    background: white;
+    padding: 18px;
+    margin-bottom: 18px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px #dfe7e0;
+}
+
+.stat {
+    font-size: 28px;
+    font-weight: bold;
+    color: #477d5b;
+}
+
+.action {
+    padding: 11px 16px;
+    margin: 5px 4px 5px 0;
+    border: none;
+    border-radius: 7px;
+    background: #477d5b;
+    color: white;
+    cursor: pointer;
+}
+
+.action:hover { background: #315d48; }
+
+input, textarea, select {
+    width: 100%;
+    padding: 11px;
+    margin: 8px 0 12px;
+    border: 1px solid #cbd8ce;
+    border-radius: 7px;
+    font: inherit;
+}
+
+textarea { min-height: 100px; }
+
+.task {
+    background: #edf4ee;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 7px;
+    overflow-wrap: anywhere;
+}
+
+.task.done {
+    text-decoration: line-through;
+    opacity: 0.65;
+}
+
+.task label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.task input { width: auto; margin: 0; }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+th, td {
+    border: 1px solid #d6e2d8;
+    padding: 12px;
+    text-align: left;
+}
+
+th { background: #e3eee6; }
+
+.progress {
+    background: #dce8df;
+    height: 14px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#progressBar {
+    height: 100%;
+    width: 0%;
+    background: #477d5b;
+    transition: width .3s;
+}
+
+#timer {
+    font-size: 45px;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+footer {
+    text-align: center;
+    padding: 18px;
+    color: #477d5b;
+}
+
+body.dark {
+    background: #18231d;
+    color: #edf4ee;
+}
+
+body.dark nav { background: #22352a; }
+body.dark nav button { color: #edf4ee; }
+body.dark nav button.active,
+body.dark nav button:hover { background: #477d5b; }
+body.dark .card { background: #26382d; color: #edf4ee; }
+body.dark h2 { color: #a9d8b6; }
+body.dark .task { background: #344b3a; }
+body.dark table { background: #26382d; color: #edf4ee; }
+body.dark th { background: #344b3a; }
+body.dark td, body.dark th { border-color: #455b4a; }
+
+@media(max-width:650px) {
+    .layout { display: block; }
+    nav {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 5px;
+    }
+    nav button { margin: 0; }
+    main { padding: 15px; }
+    table { font-size: 12px; }
+    th, td { padding: 6px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>📚 Student Study Planner</h1>
+    <p>Plan Smart • Study Better • Achieve More</p>
+</header>
+
+<div class="layout">
+
+<nav>
+    <button class="active" onclick="showPage('dashboard',this)">🏠 Dashboard</button>
+    <button onclick="showPage('subjects',this)">📚 Subjects</button>
+    <button onclick="showPage('timetable',this)">📅 Timetable</button>
+    <button onclick="showPage('tasks',this)">✅ My Tasks</button>
+    <button onclick="showPage('goals',this)">🎯 Study Goals</button>
+    <button onclick="showPage('timerPage',this)">⏱️ Study Timer</button>
+    <button onclick="showPage('notes',this)">📝 My Notes</button>
+    <button onclick="toggleDark()">🌙 Dark Mode</button>
+</nav>
+
+<main>
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="page active">
+    <h2>Welcome, Student! 👋</h2>
+    <p>Organise your learning and make every day productive.</p>
+
+    <div class="cards">
+        <div class="card">
+            <p>📚 Total Subjects</p>
+            <div class="stat">6</div>
+        </div>
+        <div class="card">
+            <p>✅ Tasks Completed</p>
+            <div class="stat" id="completedCount">0</div>
+        </div>
+        <div class="card">
+            <p>📌 Pending Tasks</p>
+            <div class="stat" id="pendingCount">3</div>
+        </div>
+        <div class="card">
+            <p>🎯 Goal Progress</p>
+            <div class="stat" id="goalPercent">0%</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Today's Schedule</h2>
+        <p>9:00 AM — Web Programming</p>
+        <p>11:00 AM — Computer Networks</p>
+        <p>2:00 PM — Database Management</p>
+        <p>4:00 PM — Operating Systems</p>
+    </div>
+
+    <div class="card">
+        <h2>Quick Actions</h2>
+        <button class="action" onclick="showPage('tasks')">View Tasks</button>
+        <button class="action" onclick="showPage('timerPage')">Start Studying</button>
+        <button class="action" onclick="showPage('notes')">Write Notes</button>
+    </div>
+</section>
+
+<!-- SUBJECTS -->
+<section id="subjects" class="page">
+    <h2>📚 My Subjects</h2>
+    <p>Explore your current subjects and topics.</p>
+
+    <div class="cards">
+        <div class="card"><h3>Web Programming</h3><p>HTML, CSS, JavaScript</p><p>Practice webpages and forms.</p></div>
+        <div class="card"><h3>Computer Networks</h3><p>Networking concepts</p><p>Study protocols and network layers.</p></div>
+        <div class="card"><h3>DBMS</h3><p>Database Management</p><p>Learn SQL and database design.</p></div>
+        <div class="card"><h3>Operating Systems</h3><p>Processes and memory</p><p>Revise scheduling and deadlocks.</p></div>
+        <div class="card"><h3>Compiler Design</h3><p>Compiler fundamentals</p><p>Study lexical and syntax analysis.</p></div>
+        <div class="card"><h3>Theory of Computation</h3><p>Automata and languages</p><p>Practise finite automata.</p></div>
+    </div>
+</section>
+
+<!-- TIMETABLE -->
+<section id="timetable" class="page">
+    <h2>📅 Weekly Timetable</h2>
+    <p>Your sample weekly study schedule.</p>
+
+    <div class="card">
+        <table>
+            <tr><th>Day</th><th>9 AM</th><th>11 AM</th><th>2 PM</th></tr>
+            <tr><td>Monday</td><td>WP</td><td>CN</td><td>DBMS</td></tr>
+            <tr><td>Tuesday</td><td>OS</td><td>WP</td><td>Compiler Design</td></tr>
+            <tr><td>Wednesday</td><td>CN</td><td>DBMS</td><td>TOC</td></tr>
+            <tr><td>Thursday</td><td>WP</td><td>OS</td><td>CN</td></tr>
+            <tr><td>Friday</td><td>DBMS</td><td>TOC</td><td>Compiler Design</td></tr>
+            <tr><td>Saturday</td><td>Revision</td><td>Practice</td><td>Mock Test</td></tr>
+        </table>
+    </div>
+</section>
+
+<!-- TASKS -->
+<section id="tasks" class="page">
+    <h2>✅ My Task Manager</h2>
+    <p>Add tasks and tick them when completed.</p>
+
+    <div class="card">
+        <label for="taskInput">Enter a new task</label>
+        <input id="taskInput" placeholder="Example: Revise HTML tags">
+        <button class="action" onclick="addTask()">+ Add Task</button>
+        <div id="taskList"></div>
+    </div>
+</section>
+
+<!-- GOALS -->
+<section id="goals" class="page">
+    <h2>🎯 My Study Goals</h2>
+
+    <div class="card">
+        <h3>Weekly Task Goal</h3>
+        <p>Complete at least 5 study tasks.</p>
+        <div class="progress"><div id="progressBar"></div></div>
+        <p id="progressText">0 out of 5 tasks completed</p>
+    </div>
+
+    <div class="card">
+        <h3>My Personal Goals</h3>
+        <p>✓ Attend classes regularly</p>
+        <p>✓ Revise subjects every day</p>
+        <p>✓ Complete assignments on time</p>
+        <p>✓ Practise Web Programming</p>
+    </div>
+</section>
+
+<!-- TIMER -->
+<section id="timerPage" class="page">
+    <h2>⏱️ Study Timer</h2>
+
+    <div class="card">
+        <p>Focus for 25 minutes, then take a short break.</p>
+        <div id="timer">25:00</div>
+        <button class="action" onclick="startTimer()">Start</button>
+        <button class="action" onclick="pauseTimer()">Pause</button>
+        <button class="action" onclick="resetTimer()">Reset</button>
+    </div>
+</section>
+
+<!-- NOTES -->
+<section id="notes" class="page">
+    <h2>📝 My Notes</h2>
+
+    <div class="card">
+        <label for="noteTitle">Note Title</label>
+        <input id="noteTitle" placeholder="Example: HTML Basics">
+        <label for="noteText">Write your notes</label>
+        <textarea id="noteText" placeholder="Write your study notes here..."></textarea>
+        <button class="action" onclick="saveNote()">Save Note</button>
+        <div id="savedNotes"></div>
+    </div>
+</section>
+
+</main>
+</div>
+
+<footer>Student Study Planner | Learn • Plan • Grow</footer>
+
+<script>
+// NAVIGATION
+function showPage(id, button) {
+    document.querySelectorAll('.page').forEach(function(page) {
+        page.classList.remove('active');
+    });
+
+    const selected = document.getElementById(id);
+    if (selected) selected.classList.add('active');
+
+    document.querySelectorAll('nav button').forEach(function(btn) {
+        btn.classList.remove('active');
+    });
+
+    if (button) {
+        button.classList.add('active');
+    } else {
+        document.querySelectorAll('nav button').forEach(function(btn) {
+            if (btn.getAttribute('onclick').includes("'" + id + "'")) {
+                btn.classList.add('active');
+            }
+        });
+    }
+}
+
+// INITIAL TASKS
+function createTask(text, checked) {
+    const item = document.createElement('div');
+    item.className = 'task' + (checked ? ' done' : '');
+
+    const label = document.createElement('label');
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = checked;
+
+    const span = document.createElement('span');
+    span.textContent = text;
+
+    checkbox.addEventListener('change', function() {
+        item.classList.toggle('done', checkbox.checked);
+        updateTasks();
+    });
+
+    label.appendChild(checkbox);
+    label.appendChild(span);
+    item.appendChild(label);
+
+    document.getElementById('taskList').appendChild(item);
+}
+
+function addTask() {
+    const input = document.getElementById('taskInput');
+    const text = input.value.trim();
+
+    if (!text) {
+        alert('Please enter a task first.');
+        return;
+    }
+
+    createTask(text, false);
+    input.value = '';
+    updateTasks();
+}
+
+function updateTasks() {
+    const boxes = document.querySelectorAll('#taskList input[type="checkbox"]');
+    const completed = document.querySelectorAll('#taskList input[type="checkbox"]:checked').length;
+    const pending = boxes.length - completed;
+
+    document.getElementById('completedCount').textContent = completed;
+    document.getElementById('pendingCount').textContent = pending;
+
+    const percent = boxes.length ? Math.round(completed / boxes.length * 100) : 0;
+    document.getElementById('goalPercent').textContent = percent + '%';
+
+    const goal = Math.min(completed, 5);
+    document.getElementById('progressBar').style.width = (goal / 5 * 100) + '%';
+    document.getElementById('progressText').textContent = goal + ' out of 5 tasks completed';
+}
+
+// DARK MODE
+function toggleDark() {
+    document.body.classList.toggle('dark');
+}
+
+// STUDY TIMER
+let seconds = 25 * 60;
+let timerInterval = null;
+
+function displayTimer() {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    document.getElementById('timer').textContent =
+        String(mins).padStart(2, '0') + ':' +
+        String(secs).padStart(2, '0');
+}
+
+function startTimer() {
+    if (timerInterval !== null) return;
+
+    timerInterval = setInterval(function() {
+        if (seconds > 0) {
+            seconds--;
+            displayTimer();
+        } else {
+            pauseTimer();
+            alert('Study session completed! Take a short break.');
+        }
+    }, 1000);
+}
+
+function pauseTimer() {
+    clearInterval(timerInterval);
+    timerInterval = null;
+}
+
+function resetTimer() {
+    pauseTimer();
+    seconds = 25 * 60;
+    displayTimer();
+}
+
+// NOTES
+function saveNote() {
+    const title = document.getElementById('noteTitle').value.trim();
+    const content = document.getElementById('noteText').value.trim();
+
+    if (!title || !content) {
+        alert('Please enter both a title and some notes.');
+        return;
+    }
+
+    const card = document.createElement('div');
+    card.className = 'task';
+
+    const heading = document.createElement('h3');
+    heading.textContent = title;
+
+    const paragraph = document.createElement('p');
+    paragraph.textContent = content;
+
+    card.appendChild(heading);
+    card.appendChild(paragraph);
+    document.getElementById('savedNotes').appendChild(card);
+
+    document.getElementById('noteTitle').value = '';
+    document.getElementById('noteText').value = '';
+}
+
+// STARTUP
+createTask('Complete HTML program', false);
+createTask('Revise class notes', false);
+createTask('Prepare for examinations', false);
+
+updateTasks();
+displayTimer();
+</script>
+
+</body>
+</html>
